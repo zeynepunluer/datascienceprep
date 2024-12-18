@@ -1,0 +1,78 @@
+---
+title = "PCA"
+---
+
+```{r}
+# 1. Gerekli kütüphaneleri yükleyelim
+library(ggplot2)  # Görselleştirme için
+library(dplyr)    # Veri manipülasyonu için
+```
+
+```{r}
+# 2. Veri setini yükleyelim
+data(iris)
+head(iris)  # İlk 6 satırı görüntüleyelim
+```
+
+```{r}
+View(iris)
+```
+
+```{r}
+# 3. Sadece sayısal sütunları seçelim (PCA sayısal verilere uygulanır)
+iris_data <- iris %>% select(-Species)  # "Species" kategorik sütunu çıkarıldı
+head(iris_data)
+```
+
+```{r}
+# 4. Veriyi ölçeklendirelim (standartlaştırma)
+#PCA varyansı temel alarak çalıştığı için scale ediyoruz.
+iris_scaled <- scale(iris_data)
+```
+
+```{r}
+# 5. PCA uygulayalım
+pca_result <- prcomp(iris_scaled, center = TRUE, scale. = TRUE)
+```
+
+```{r}
+# 6. PCA sonuçlarını inceleyelim
+summary(pca_result)  # Varyans oranları ve PC'ler
+pca_result$rotation  # Ana bileşen yükleri (eigenvectors)
+pca_result$x         # Verinin PCA sonucu oluşturulan bileşenlerdeki değerleri
+```
+
+```{r}
+# 7. PCA bileşenlerini görselleştirme (İlk 2 bileşen)
+pca_data <- data.frame(pca_result$x, Species = iris$Species)
+```
+
+#### PCA sonrası sütunlar silinmez; bunun yerine **yeni ana bileşenler** oluşturulur. Boyut küçültme işlemi, bu bileşenlerden varyansı en fazla açıklayan birkaç tanesini seçmekle yapılır. Bu sayede hem veri sadeleşir hem de bilgi kaybı minimize edilir.
+
+```{r}
+View(pca_data)
+```
+
+```{r}
+# screeplot sonucu incelenerek PCA'dan ana bileşen seçimi yapılabilir.
+# Bu grafiğe göre en iyi bileşenler PC1 ve PC2
+screeplot(pca_result, type = "lines", main = "Scree Plot")
+```
+
+```{r}
+# Varyans yüzdesini inceleyelim
+summary(pca_result) # Buradaki sonuca göre en iyi varyansı tanımlayanlar PC1 ve PC2
+
+```
+
+```{r}
+View(selected_components)
+```
+
+```{r}
+# PCA scatter plot (PC1 ve PC2'yi çizelim)
+ggplot(pca_data, aes(x = PC1, y = PC2, color = Species)) +
+  geom_point(size = 3) +
+  labs(title = "PCA - Iris Data", x = "Principal Component 1", y = "Principal Component 2") +
+  theme_minimal()
+```

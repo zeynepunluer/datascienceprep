@@ -1,0 +1,65 @@
+```{r}
+# Iris veri setini yükleyelim
+data(iris)
+
+# Veri setine göz atalım
+head(iris)
+```
+
+```{r}
+# Sadece sayısal sütunları seçelim
+iris_data <- iris[, -5]  # Species sütunu hariç
+```
+
+```{r}
+# K-Means algoritmasını uygulayalım (k = 3)
+set.seed(123)  # Sonuçların tekrarlanabilir olması için rastgelelikiyi kontrol edelim
+kmeans_result <- kmeans(iris_data, centers = 3)
+
+# Kümeleme sonucuna göz atalım
+kmeans_result
+
+```
+
+```{r}
+# Kümeleri görselleştirelim
+library(ggplot2)
+
+# Veriyi ve kümeleri birleştirerek görselleştirelim
+iris_data$Cluster <- as.factor(kmeans_result$cluster)  # Küme bilgilerini veri setine ekleyelim
+
+# 2D Scatter plot
+ggplot(iris_data, aes(x = Sepal.Length, y = Sepal.Width, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Means Clustering (k = 3)", x = "Sepal Length", y = "Sepal Width") +
+  theme_minimal()
+
+```
+
+```{r}
+# Küme merkezlerini görselleştirelim
+centers <- as.data.frame(kmeans_result$centers)
+colnames(centers) <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+
+# Scatter plot üzerinde küme merkezlerini ekleyelim
+ggplot(iris_data, aes(x = Sepal.Length, y = Sepal.Width, color = Cluster)) +
+  geom_point() +
+  geom_point(data = centers, aes(x = Sepal.Length, y = Sepal.Width), 
+             color = "black", size = 4, shape = 3) +  # Küme merkezleri
+  labs(title = "K-Means Clustering (k = 3)", x = "Sepal Length", y = "Sepal Width") +
+  theme_minimal()
+
+```
+
+```{r}
+# Küme merkezlerini görüntüleyelim
+kmeans_result$centers
+
+# Küme atamalarını (cluster assign) görüntüleyelim
+kmeans_result$cluster
+
+# Her kümenin boyutunu (cluster sizes) görüntüleyelim
+kmeans_result$size
+
+```
+

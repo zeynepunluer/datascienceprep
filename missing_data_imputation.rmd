@@ -1,0 +1,108 @@
+---
+title: "Air Quality Analysis"
+author: "Sadık"
+output: html_document
+---
+
+## Air Quality Data Analysis
+
+### Kod bloğu açmak için Ctrl + Alt + I
+
+### Yorum satırı için Ctrl + Shift + C
+
+#### Reading Data
+
+```{r}
+# airquality veri setini oku
+data("airquality")
+```
+
+#### data.head()
+
+```{r}
+# İlk birkaç satıra göz at
+head(airquality)
+```
+
+#### data.info()
+
+```{r}
+# Veri yapısını inceleme
+str(airquality)
+```
+
+```{r}
+# Sütunlar hakkında özet bilgi
+summary(airquality)
+```
+
+#### NaN Değer Tespiti
+
+```{r}
+# Eksik değerlerin toplamı
+colSums(is.na(airquality))
+
+# Veri setindeki toplam eksik değer sayısı
+sum(is.na(airquality)) # 44 tane NaN değer var.
+```
+
+#### Mean, Median, Mode bulma
+
+```{r}
+# Ortalama (Mean)
+ozone_mean <- mean(airquality$Ozone, na.rm = TRUE)
+solar_mean <- mean(airquality$Solar.R, na.rm = TRUE)
+
+# Medyan (Median)
+ozone_median <- median(airquality$Ozone, na.rm = TRUE)
+solar_median <- median(airquality$Solar.R, na.rm = TRUE)
+
+# Mod (Mode) - R'da mod için özel bir fonksiyon yok, elle yazalım
+get_mode <- function(v) {
+  uniq_vals <- unique(v)
+  uniq_vals[which.max(tabulate(match(v, uniq_vals)))]
+}
+
+ozone_mode <- get_mode(airquality$Ozone[!is.na(airquality$Ozone)]) # NaN'leri çıkar
+solar_mode <- get_mode(airquality$Solar.R[!is.na(airquality$Solar.R)])
+
+# Sonuçları yazdırma
+cat("Ozone - Mean:", ozone_mean, "Median:", ozone_median, "Mode:", ozone_mode, "\n")
+cat("Solar.R - Mean:", solar_mean, "Median:", solar_median, "Mode:", solar_mode, "\n")
+```
+
+#### NaN Doldurma 1
+
+```{r}
+#NaN Doldurma Teknik 1
+
+# Ozone sütunundaki NA değerlerini ozone_mean ile doldur
+airquality$Ozone[is.na(airquality$Ozone)] <- ozone_mean
+
+# Solar.R sütunundaki NA değerlerini solar_median ile doldur
+airquality$Solar.R[is.na(airquality$Solar.R)] <- solar_median
+
+# Doldurulan veri setine göz at
+summary(airquality)
+```
+
+#### NaN Doldurma 2
+
+```{r}
+# NaN Doldurma Fonksiyon ile
+# Eksik değerleri belirli bir değere göre doldurmak için genel bir fonksiyon
+fill_na <- function(column, value) {
+  column[is.na(column)] <- value
+  return(column)
+}
+
+# Ozone ve Solar.R sütunlarını doldur
+airquality$Ozone <- fill_na(airquality$Ozone, ozone_mean)
+airquality$Solar.R <- fill_na(airquality$Solar.R, solar_median)
+
+```
+
+```{r}
+# Veri setini tablo olarak gör (RStudio'da)
+View(airquality)
+```

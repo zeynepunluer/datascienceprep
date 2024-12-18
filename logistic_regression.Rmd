@@ -1,0 +1,88 @@
+---
+title: "Logistic Regression"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+# Dosya yolunu belirt
+file_path <- "data/loan_data.csv"
+
+# CSV dosyasını oku
+data <- read.csv(file_path)
+```
+
+```{r}
+# Veri yapısını inceleme
+str(data)
+```
+
+```{r}
+View(data)
+```
+
+```{r}
+summary(data)
+```
+
+```{r}
+# Eksik değerlerin toplamı
+colSums(is.na(data))
+
+# Veri setindeki toplam eksik değer sayısı
+sum(is.na(data)) 
+```
+
+```{r}
+# Gerekli kütüphaneleri yükle
+library(caret) # konsola install.packages("caret") yaz.
+```
+
+```{r}
+# Eğitim verisi ve hedef değişkeni ayıralım
+# Burada hedef değişkenimiz "Loan_Status", bağımsız değişkenlerimizse diğer sütunlar
+set.seed(123)  # Sonuçların tutarlı olması için
+
+# Veriyi eğitim ve test olarak bölelim
+trainIndex <- createDataPartition(data$loan_status, p = .7, list = FALSE)
+trainData <- data[trainIndex, ]
+testData <- data[-trainIndex, ]
+```
+
+```{r}
+# Logistic Regression Modeli,
+# y ~ yanında . olursa verideki diğer bütün sütunlar dahil oluyor.
+# . yerine bazı spesifik sütun isimleri de yazılabilir.
+model <- glm(loan_status ~ ., 
+             data = trainData, family = "binomial")
+
+```
+
+```{r}
+# Model özetini al
+summary(model)
+```
+
+```{r}
+# Tahmin yapalım
+predicted <- predict(model, testData, type = "response")
+```
+
+```{r}
+# Tahminleri 0.5 eşik değeri ile sınıflandıralım
+predicted_class <- ifelse(predicted > 0.5, 1, 0)
+```
+
+```{r}
+# predicted_class ve testData$loan_status faktör türüne dönüştürülür
+# R factor tipinin karşılığı Python pandas Categorical tipidir.
+# Confusion matrix'te sonuç alabilmek için factor tipine dönüşüm gerekli.
+predicted_class <- factor(predicted_class, levels = c(0, 1))
+testData$loan_status <- factor(testData$loan_status, levels = c(0, 1))
+```
+
+```{r}
+# Confusion Matrix (Karmaşık Matris) ile performansı değerlendirelim
+confusionMatrix(factor(predicted_class), testData$loan_status)
+```

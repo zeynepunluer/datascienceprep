@@ -1,0 +1,135 @@
+```{r}
+# mtcars veri setini yükleyelim
+data(mtcars)
+# Veriyi inceleyelim
+head(mtcars)
+
+```
+
+```{r}
+# 1. Gerekli kütüphaneleri yükleyelim
+library(ggplot2)  # Görselleştirme için
+library(dplyr)    # Veri manipülasyonu için
+```
+
+```{r}
+# Özet bilgileri görüntüleyelim
+summary(mtcars)
+```
+
+```{r}
+# Verinin yapısını inceleyelim
+str(mtcars)
+```
+
+```{r}
+# EDA için görselleştirme
+ggplot(mtcars, aes(x = mpg, y = hp)) +
+  geom_point(aes(color = factor(cyl))) +
+  labs(title = "MPG vs HP", x = "Miles Per Gallon", y = "Horsepower")
+```
+
+```{r}
+# Eksik değer kontrolü
+# Eksik değerlerin toplamı
+colSums(is.na(mtcars))
+
+# Veri setindeki toplam eksik değer sayısı
+sum(is.na(mtcars)) # 44 tane NaN değer var.
+
+```
+
+```{r}
+# R'da Filtre
+# Sadece "mpg", "hp" ve "wt" sütunlarını seçelim
+# filtered_data <- select(mtcars, mpg, hp, wt)
+# 
+# # Sütun isimlerini belirt
+# filtered_data <- mtcars[, c("mpg", "hp", "wt")]
+```
+
+```{r}
+# Sütun silme işlemleri
+# "hp" ve "wt" sütunlarını sil
+# mtcars_dropped <- mtcars[, !(colnames(mtcars) %in% c("hp", "wt"))]
+# 
+# # 4. ve 6. sütunları sil
+# mtcars_dropped <- mtcars[, -c(4, 6)]
+# 
+# print(mtcars_dropped)
+
+```
+
+```{r}
+# mpg değişkeninin histogramı
+hist(mtcars$mpg, main = "Distribution of MPG", xlab = "Miles per Gallon", col = "skyblue", border = "black")
+
+# boxplot ile outlier kontrolü
+boxplot(mtcars$mpg, main = "Boxplot of MPG", ylab = "Miles per Gallon", col = "orange")
+```
+
+```{r}
+# Outlier değer kontrolü
+# mtcars veri setindeki "hp" sütununda outlier kontrolü
+boxplot(mtcars$hp, main = "Boxplot of hp", ylab = "Horsepower")
+
+# Outlier değerlerin sayısal görünümü
+outliers <- boxplot.stats(mtcars$hp)$out
+print(outliers)
+```
+
+```{r}
+# Outlier Kontrolü Z-Score
+
+# Numeric olan sütunları filtrele
+numeric_cols <- sapply(mtcars, is.numeric)
+
+# Her bir numeric sütunda Z-Score hesaplayıp outlier tespiti yapalım
+for (col in names(mtcars)[numeric_cols]) {
+  
+  # Ortalama ve standart sapmayı hesapla
+  col_mean <- mean(mtcars[[col]], na.rm = TRUE)
+  col_sd <- sd(mtcars[[col]], na.rm = TRUE)
+  
+  # Z-Score hesapla
+  z_scores <- (mtcars[[col]] - col_mean) / col_sd
+  
+  # Aykırı değerleri tespit et
+  outliers <- mtcars[[col]][abs(z_scores) > 3]
+  
+  # Sonucu ekrana yazdır
+  if (length(outliers) > 0) {
+    cat("\nSütun:", col, "\nAykırı Değerler:", outliers, "\n")
+  } else {
+    cat("\nSütun:", col, "\nAykırı Değer bulunamadı.\n")
+  }
+}
+```
+
+-   **Güçlü Pozitif Korelasyon (+0.7 ila +1):**
+
+    -   İki değişkenin değerleri benzer bir şekilde hareket eder.
+
+    -   Bu durumda sütunlar **birbirine çok yakın** kabul edilir.
+
+    -   **Örnek:** Ağırlık (kg) ve vücut kütle indeksi (BMI).
+
+-   **Güçlü Negatif Korelasyon (-0.7 ila -1):**
+
+    -   Bir değişken artarken diğeri azalır; yani hareketleri ters yöndedir.
+
+    -   Ancak yine de güçlü bir ilişki söz konusudur.
+
+-   **Korelasyon Düşük (+0.3 ila -0.3):**
+
+    -   Değişkenler arasında zayıf ya da hiç ilişki yoktur.
+
+```{r}
+# Korelasyon
+# Korelasyon matrisi
+cor_matrix <- cor(mtcars)
+print(cor_matrix)
+
+# Isı haritası (heatmap) ile görselleştirme
+heatmap(cor_matrix, main = "Correlation Heatmap", col = heat.colors(10), scale = "column")
+```
