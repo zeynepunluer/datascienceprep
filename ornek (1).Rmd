@@ -1,0 +1,76 @@
+---
+title: "Test"
+output: html_document
+date: "2024-12-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+# Gerekli kütüphaneleri yükleyin
+library(ggplot2)
+library(dplyr)
+library(caret)  # Model performansı için gerekli
+
+# Örnek veri seti oluşturma
+veri <- data.frame(
+  Calisan_ID = 1:10,
+  Yas = c(35, 29, 42, 25, 37, 30, 41, 28, 50, 34),
+  Egitim_Yili = c(16, 14, 18, 12, 15, 14, 17, 13, 20, 15),
+  Is_Deneyimi = c(10, 5, 15, 3, 11, 7, 20, 4, 25, 9),
+  Maas = c(70000, 55000, 85000, 45000, 75000, 60000, 90000, 50000, 100000, 68000),
+  Departman = c("IT", "Insan Kaynaklari", "Finans", "IT", "IT", "Insan Kaynaklari", "Finans", "IT", "Finans", "Insan Kaynaklari"),
+  Cinsiyet = c("Erkek", "Kadin", "Erkek", "Kadin", "Erkek", "Kadin", "Erkek", "Kadin", "Erkek", "Kadin")
+)
+
+head(veri)
+```{r}
+ggplot(veri, aes(x = Departman, y = Maas)) +
+  geom_boxplot() +
+  labs(title = "Departmanlara Göre Maaş Dağılımı", x = "Departman", y = "Maaş")
+```
+
+# BU kod ile y ekseninde tam sayıları elde edebiliriz
+
+<!-- library(scales)  # 'comma' fonksiyonunu kullanmak için -->
+
+<!-- ggplot(veri, aes(x = Yas, y = Maas)) + -->
+<!--   geom_point(aes(color = Cinsiyet)) + -->
+<!--   labs(title = "Yaş ve Maaş İlişkisi", x = "Yaş", y = "Maaş") + -->
+<!--   scale_y_continuous(labels = comma)  # Maaş eksenini tam sayı formatında göster -->
+
+
+
+
+```{r}
+# 3. Modelleme (Linear Regression)
+# Veri bölme (eğitim ve test seti)
+set.seed(123)
+train_index <- createDataPartition(veri$Maas, p = 0.8, list = FALSE)
+train_data <- veri[train_index, ]
+test_data <- veri[-train_index, ]
+
+# Lineer regresyon modeli
+model <- lm(Maas ~ Yas + Egitim_Yili + Is_Deneyimi, data = train_data)
+
+# Model özet bilgisi
+summary(model)
+```
+
+
+
+# 4. Model Performansı
+# Tahminler
+predictions <- predict(model, newdata = test_data)
+
+# R^2 değeri
+r_squared <- caret::R2(predictions, test_data$Maas)
+
+# RMSE değeri
+rmse <- caret::RMSE(predictions, test_data$Maas)
+
+# Performans sonuçları
+cat("R^2: ", r_squared, "\n")
+cat("RMSE: ", rmse, "\n")
