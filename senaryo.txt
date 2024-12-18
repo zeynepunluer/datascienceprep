@@ -1,0 +1,87 @@
+1. Exploratory Data Analysis ve Görselleştirme
+Senaryo: Bir e-ticaret sitesinin ürün fiyatları ve kullanıcı yorumları ile ilgili verileriniz var. Amacınız, ürün fiyatlarının kullanıcı yorumlarıyla olan ilişkisinin ne olduğunu keşfetmek.
+
+2. PCA ve Veri Görselleştirme
+Senaryo: Müşterilerin demografik verileri (yaş, gelir, eğitim durumu vb.) ve satın alma alışkanlıkları var. Bu veriyi anlamak için boyut indirgeme yapmak istiyorsunuz.
+
+3. Logistic Regression ve Model Performansı
+Senaryo: Bir bankanın kredi onaylarını tahmin etmek için veriniz var. Kredi onayı (evet/hayır) bağımlı değişkeni, diğer demografik bilgiler ise bağımsız değişkenler.
+4. Clustering ve Veri Görselleştirme
+Senaryo: Bir marketin müşteri verilerini içeren bir veri setiniz var ve müşterileri alışveriş alışkanlıklarına göre gruplamak istiyorsunuz.
+5. Missing Data Imputation ve Regresyon
+Senaryo: Satış verilerinizde bazı eksik veriler var (özellikle satış miktarları). Bu eksik verileri impute ettikten sonra, satışların gelecekteki trendini tahmin etmek için bir regresyon modeli kurmak istiyorsunuz.
+6. Performance Analysis (Çapraz Doğrulama ve Model Değerlendirme)
+Senaryo: Bir sınıflandırma modelini eğittiniz (örneğin, kredi onayı tahmini). Modelinizin doğruluğunu değerlendirmek ve overfitting olasılığını kontrol etmek istiyorsunuz.
+
+
+1. Yaş ve Departman Arasındaki İlişkiyi Bulmak
+
+    Çözüm Yolu:
+        Bu tür bir ilişkiyi incelemek için Exploratory Data Analysis (EDA) kullanırsınız.
+        Veriyi anlamak için görselleştirme tekniklerini kullanabilir ve her bir departmanın yaş dağılımını görmek için boxplot veya bar chart gibi görseller oluşturabilirsiniz.
+
+2. Maaş ve Eğitim Yılı Arasındaki Korelasyonu İncelemek
+
+    Çözüm Yolu:
+        Exploratory Data Analysis (EDA) yöntemini kullanarak, veriyi inceleyebilir ve maaş ile eğitim yılı arasındaki ilişkiyi görmek için scatter plot (dağılım grafiği) oluşturabilirsiniz.
+        Korelasyon katsayısını hesaplayarak ilişkiyi istatistiksel olarak da değerlendirebilirsiniz.
+
+3. Eksik Verilerin Doldurulması
+
+    Çözüm Yolu:
+        Bu tür bir sorun Missing Data Imputation ile çözülebilir.
+        Eksik veriyi doldurmak için ortalama, medyan veya mode gibi basit yöntemler kullanılabilir, veya daha ileri düzey yöntemler (örneğin, KNN imputation) tercih edilebilir.
+
+4. Yaş ve Maaş Değişkenlerinin Boyutunu İndirmek
+
+    Çözüm Yolu:
+        PCA (Principal Component Analysis) kullanarak boyut indirgeme yapabilirsiniz.
+        Veri setindeki yüksek boyutlu değişkenleri, daha anlamlı yeni değişkenlere dönüştürerek analiz yapılabilir.
+
+5. Departmana Göre Maaş Farklılıklarını Sınıflandırmak
+
+    Çözüm Yolu:
+        Bu soruda Logistic Regression kullanarak, departmanlar arasındaki maaş farklarını sınıflandırabilirsiniz.
+        Kategorik bir bağımsız değişken (departman) ile sürekli bir bağımlı değişken (maaş) arasındaki ilişkiyi modellemek için lojistik regresyon kullanabilirsiniz.
+
+6. Çalışanları Maaşlarına Göre Kümelemek
+
+    Çözüm Yolu:
+        Clustering (Kümeleme) tekniklerini kullanabilirsiniz.
+        Özellikle K-means clustering veya hiyerarşik kümeleme kullanarak, maaş gibi özelliklere göre benzer gruplar oluşturabilirsiniz.
+
+7. Modelin Başarı Oranını Değerlendirmek
+
+    Çözüm Yolu:
+        Performance Analysis kullanarak modelinizin doğruluğunu ölçebilirsiniz.
+        Precision, recall, F1-score gibi metriklerle sınıflandırma modeli başarısını değerlendirebilir, R-squared ile regresyon modelini değerlendirebilirsiniz.
+
+8. Çalışanların Eğitim Yılı ve Deneyimi Arasındaki İlişkiyi İncelemek
+
+    Çözüm Yolu:
+        Bu ilişkiyi bulmak için Exploratory Data Analysis (EDA) teknikleri ile veriyi inceleyebilir, scatter plot ve korelasyon analizi yapabilirsiniz.
+        Eğitim yılı ve deneyim arasındaki ilişkiyi sayısal olarak değerlendirmek için korelasyon katsayısı hesaplayabilirsiniz.
+
+9. Çalışanları Eğitim Yılına Göre Gruplamak
+
+    Çözüm Yolu:
+        Clustering veya kategorik veri analizi kullanarak, çalışanları eğitim yıllarına göre gruplandırabilirsiniz.
+        Bu tür bir problemde K-means veya hiyerarşik kümeleme kullanılabilir.
+
+10. Veri Setindeki Kategorik Değişkenlerin Dağılımını İncelemek
+
+    Çözüm Yolu:
+        Exploratory Data Analysis (EDA) kullanarak kategorik değişkenlerin dağılımını inceleyebilirsiniz.
+        Bar chart veya pie chart gibi görsellerle kategorik veri setindeki dağılımı inceleyebilirsiniz.
+
+11. Yaş Değişkenindeki Değerlerin Normal Dağılım Gösterip Gösterdiğini Kontrol Etmek
+
+    Çözüm Yolu:
+        Exploratory Data Analysis (EDA) ile veriyi inceleyebilir ve histogram veya Q-Q plot kullanarak yaş değişkeninin dağılımını görselleştirebilirsiniz.
+        Normal dağılım testi için Shapiro-Wilk testi gibi istatistiksel testler kullanılabilir.
+
+12. Maaş Verilerini Sınıflandırmak için Hangi Modeli Kullanırsınız?
+
+    Çözüm Yolu:
+        Bu tür bir soruda, Logistic Regression veya Decision Trees gibi sınıflandırma modellerini kullanabilirsiniz.
+        Maaş verisi belirli bir aralıkta sınıflandırılacaksa, lojistik regresyon uygun olabilir.
